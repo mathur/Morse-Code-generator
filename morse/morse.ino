@@ -4,12 +4,11 @@
   http://www.asciitable.com/
 */
 
-/* TODO:
- - Letter (from word) to morse symbol. Get ascii for letter, offset, and look up in alphabet array.
- - Then, feed the array of morse symbols to parseMorse(), which will beep and blink stuff.
-*/
 
 int led = 13;
+int speaker = 8;
+int ASCII_OFFSET = 65;
+int unit = 30;
 
 String alphabet[] = {
   ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", 
@@ -21,9 +20,10 @@ String alphabet[] = {
 void setup() {
   Serial.begin(9600);
   pinMode(led, OUTPUT);
+  pinMode(speaker, OUTPUT);
   
   char letter = 'l';
-  
+  /*
   switch(letter) {
     case 'a': Serial.print(alphabet[0]);
     case 'b': Serial.print(alphabet[1]);
@@ -50,27 +50,55 @@ void setup() {
     case 'w': Serial.print(alphabet[22]);
     case 'x': Serial.print(alphabet[23]);
     case 'y': Serial.print(alphabet[24]);
-    case 'z': Serial.print(alphabet[25]);
-    transmit();
-  }
+    case 'z': Serial.print(alphabet[25]);*/
 }
 
 void loop() {
-  digitalWrite(led, HIGH);
-  delay(200);
-  digitalWrite(led, LOW);
-  delay(200);
+  String word = "L";//ILLINI";
+  transmit(toMorse(word));
+  delay(1000);
 }
 
-void transmit(){
-  foreach (char c in "-.---...-.-.-")
-  {
-    if(c == ".") {
-      digitalWrite(led, HIGH);
-      delay(200);
-    }
-    else {
-      delay(200);
+String toMorse(String word) {
+  String morse = "";
+  for (int i = 0; i < word.length(); i++) {
+     Serial.print(((int) word[i] - ASCII_OFFSET));
+     Serial.print(" ");
+     morse += alphabet[(int) word[i] - ASCII_OFFSET];
+     morse += " ";
+  }
+  Serial.print("\n" + morse + "\n");
+  return morse;
+}
+
+void transmit(String code) {
+  for (int i = 0; i < code.length(); i++) {
+    if (code[i] == '.') {
+      dot();
+      /*digitalWrite(led, HIGH);
+      delay(100);
+      digitalWrite(led, LOW);*/
+    } else if (code[i] == '-') {
+      dash();
+    } else if (code[i] == ' ') {
+      delay(5 * unit);
+    } else {
+      Serial.print("Something bad happened\n");
     }
   }
 }
+
+void dot() {
+  tone(8, 500, unit);
+  delay(unit);
+  /*digitalWrite(speaker, HIGH);
+  delay(2);
+  digitalWrite(speaker, LOW);
+  delay(200);*/
+}
+
+void dash() {
+  tone(8, 500, 5 * unit);
+  delay(unit);
+}
+

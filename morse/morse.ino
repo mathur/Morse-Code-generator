@@ -1,7 +1,7 @@
 /*
-25 element array of morse symbols - cast characters to ints and look them up
-41 - 5A (base 16) or 65 - 90 (base 10) for the capital letters
-http://www.asciitable.com/
+  25 element array of morse symbols - cast characters to ints and look them up
+  41 - 5A (base 16) or 65 - 90 (base 10) for the capital letters
+  http://www.asciitable.com/
 */
 
 /* TODO:
@@ -21,13 +21,6 @@ String alphabet[] = {
 void setup() {
   Serial.begin(9600);
   pinMode(led, OUTPUT);
-  for (int i = 0; i < 26; i++) {
-    Serial.print("alphabet[");
-    Serial.print(i);
-    Serial.print("] = ");
-    Serial.print(alphabet[i]);
-    Serial.print("\n");
-  }
   
   char letter = 'l';
   
@@ -58,6 +51,7 @@ void setup() {
     case 'x': Serial.print(alphabet[23]);
     case 'y': Serial.print(alphabet[24]);
     case 'z': Serial.print(alphabet[25]);
+    transmit();
   }
 }
 
@@ -68,7 +62,15 @@ void loop() {
   delay(200);
 }
 
-/*void parseMorse(char[] morse) {
-  
-}*/
-
+void transmit(){
+  foreach (char c in "-.---...-.-.-")
+  {
+    if(c == ".") {
+      digitalWrite(led, HIGH);
+      delay(200);
+    }
+    else {
+      delay(200);
+    }
+  }
+}
